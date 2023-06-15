@@ -1,75 +1,75 @@
 <template>
   <div class="container">
-    <div class="menu-list">
-      <div
-        class="menu-item"
-        @click="() => handleClick(item)"
-        v-for="(item, index) in menuList"
-        :key="index"
-      >
-        {{ item.label }}
-      </div>
-    </div>
+    <div style="position: relative" id="myKeyboardContainer"></div>
+    <math-field class="math-editor">{{ mathHtml }}</math-field>
     <textarea
+      disabled
       class="latex-text"
       v-model="mathHtml"
       @mouseout="onTextAreaMouseout"
     />
-    <math-field class="math-editor">{{ mathHtml }}</math-field>
+    <div class="math-json">{{ mathJson }}</div>
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script setup type="module">
+import { ComputeEngine } from "https://unpkg.com/@cortex-js/compute-engine?module";
+import { ref, onMounted } from "vue";
 
-const mathHtml = ref("\\frac{-b\\pm\\sqrt{{b}^{2}-4ac}}{2a4}");
+const defaultLatex = "\\Delta C_{ACTUAL,t}-\\Delta C_{BSL,t}-LK_{t}";
+const ce = new ComputeEngine();
 
-const menuList = ref([
-  {
-    label: "frac",
-    value: "\\frac{}{}",
-  },
-  {
-    label: "sum",
-    value: "\\sum_{}^{}",
-  },
-  {
-    label: "+",
-    value: "+",
-  },
-  {
-    label: "-",
-    value: "-",
-  },
-]);
-
-const handleClick = ({ value }) => {
-  console.log(value);
+const transformLatex2MathJson = (latex) => {
+  const expr = ce.parse(latex).canonical;
+  return expr.json;
 };
+
+const mathHtml = ref(defaultLatex);
+const mathJson = ref(transformLatex2MathJson(defaultLatex));
+
+const init = () => {
+  const oEditor = document.querySelector(".math-editor");
+
+  const oKeyboard = document.getElementById("myKeyboardContainer");
+
+  oEditor.mathVirtualKeyboardPolicy = "manual";
+
+  mathVirtualKeyboard.show();
+
+  mathVirtualKeyboard.container = oKeyboard;
+
+  mathVirtualKeyboard.layouts = {
+    rows: [
+      [
+        "+",
+        "-",
+        "\\times",
+        "\\frac{#@}{#?}",
+        "=",
+        "(",
+        ")",
+        "\\sqrt{#0}",
+        "#@^{#?}",
+        "\\sum_{a}^{b}",
+      ],
+      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+    ],
+  };
+  oEditor.addEventListener("input", (ev) => {
+    mathHtml.value = oEditor.value;
+    mathJson.value = transformLatex2MathJson(oEditor.value);
+  });
+};
+
+onMounted(() => {
+  init();
+});
 </script>
 
-<style scoped>
+<style>
 .container {
   width: 500px;
-}
-.menu-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  margin: 10px 0;
-}
-
-.menu-item {
-  cursor: pointer;
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  margin-right: 10px;
-  text-align: center;
-  border: 1px solid #ccc;
-  cursor: pointer;
+  position: relative;
 }
 
 .math-editor {
@@ -79,11 +79,27 @@ const handleClick = ({ value }) => {
 
 .latex-text {
   margin: 10px auto;
-  margin-top: 30px;
   display: block;
-  width: 90%;
-  height: 100px;
-  border: 1px solid rgb(206, 212, 218);
+  text-align: center;
+  font-size: 18px;
+  width: 100%;
+  height: 60px;
+  border: none;
   background-color: rgba(0, 0, 0, 0);
+}
+
+#myKeyboardContainer {
+  width: 500px;
+  height: 150px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.math-editor .ML__virtual-keyboard-toggle {
+  display: none !important;
+}
+
+#myKeyboardContainer > div .MLK__toolbar {
+  display: none;
 }
 </style>

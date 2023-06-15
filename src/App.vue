@@ -32,7 +32,9 @@ const handleClick = (value) => {
         {{ item.label }}
       </div>
     </div>
-    <component :is="componentName" />
+    <keep-alive>
+      <component :is="componentName" />
+    </keep-alive>
   </div>
 </template>
 
