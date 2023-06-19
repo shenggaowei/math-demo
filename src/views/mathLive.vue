@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <div style="position: relative" id="myKeyboardContainer"></div>
-    <math-field class="math-editor">{{ mathHtml }}</math-field>
+    <math-field ref="textAreaRef" class="math-editor">{{
+      mathHtml
+    }}</math-field>
     <textarea
       disabled
       class="latex-text"
@@ -20,10 +22,11 @@ const defaultLatex = "\\Delta C_{ACTUAL,t}-\\Delta C_{BSL,t}-LK_{t}";
 const ce = new ComputeEngine();
 
 const transformLatex2MathJson = (latex) => {
-  const expr = ce.parse(latex).canonical;
+  const expr = ce.parse(latex, { canonical: true });
   return expr.json;
 };
 
+const textAreaRef = ref(null);
 const mathHtml = ref(defaultLatex);
 const mathJson = ref(transformLatex2MathJson(defaultLatex));
 
@@ -63,6 +66,7 @@ const init = () => {
 
 onMounted(() => {
   init();
+  textAreaRef.value.insert("\\frac{5b}{4b}");
 });
 </script>
 

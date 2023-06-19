@@ -2,15 +2,20 @@
 import { ref } from "vue";
 import mathPage from "./views/math.vue";
 import matchLivePage from "./views/mathLive.vue";
+import mathQuill from "./views/mathQuill.vue";
 
 const pageList = ref([
   {
-    label: "编辑latex",
+    label: "mathJax",
     value: mathPage,
   },
   {
-    label: "编辑公式",
+    label: "mathLive",
     value: matchLivePage,
+  },
+  {
+    label: "mathquill",
+    value: mathQuill,
   },
 ]);
 
