@@ -1,73 +1,72 @@
 <template>
   <div class="container">
-    <div style="position: relative" id="myKeyboardContainer"></div>
-    <math-field ref="textAreaRef" class="math-editor">{{
-      mathHtml
-    }}</math-field>
-    <textarea
-      disabled
-      class="latex-text"
-      v-model="mathHtml"
-      @mouseout="onTextAreaMouseout"
-    />
-    <div class="math-json">{{ mathJson }}</div>
+    <div class="menu-list">
+      <div
+        class="menu-item"
+        @click="() => handleClick(item)"
+        v-for="(item, index) in menuList"
+        :key="index"
+      >
+        {{ item.label }}
+      </div>
+    </div>
+    <mathlive-mathfield
+      @on-input="onInput"
+      :value="latex"
+      ref="mathRef"
+    ></mathlive-mathfield>
+    <div class="latex-text">{{ latex }}</div>
+    <div class="latex-text">{{ mathJson }}</div>
   </div>
 </template>
 
 <script setup type="module">
+import mathliveMathfield from "../components/mathlive-mathfield.vue";
 import { ComputeEngine } from "https://unpkg.com/@cortex-js/compute-engine?module";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
-const defaultLatex = "\\Delta C_{ACTUAL,t}-\\Delta C_{BSL,t}-LK_{t}";
+const latex = ref("");
+const mathRef = ref(null);
+const mathJson = ref([]);
+
 const ce = new ComputeEngine();
+
+const menuList = ref([
+  {
+    label: "DELTA",
+    value: "\\Delta",
+  },
+  {
+    label: "frac",
+    value: "\\frac",
+  },
+  {
+    label: "sum",
+    value: "\\sum_{}^{}",
+  },
+  {
+    label: "+",
+    value: "+",
+  },
+  {
+    label: "-",
+    value: "-",
+  },
+]);
+
+const handleClick = ({ value }) => {
+  mathRef.value.insert(value);
+};
+
+const onInput = (value) => {
+  latex.value = value;
+  mathJson.value = transformLatex2MathJson(value);
+};
 
 const transformLatex2MathJson = (latex) => {
   const expr = ce.parse(latex, { canonical: true });
   return expr.json;
 };
-
-const textAreaRef = ref(null);
-const mathHtml = ref(defaultLatex);
-const mathJson = ref(transformLatex2MathJson(defaultLatex));
-
-const init = () => {
-  const oEditor = document.querySelector(".math-editor");
-
-  const oKeyboard = document.getElementById("myKeyboardContainer");
-
-  oEditor.mathVirtualKeyboardPolicy = "manual";
-
-  mathVirtualKeyboard.show();
-
-  mathVirtualKeyboard.container = oKeyboard;
-
-  mathVirtualKeyboard.layouts = {
-    rows: [
-      [
-        "+",
-        "-",
-        "\\times",
-        "\\frac{#@}{#?}",
-        "=",
-        "(",
-        ")",
-        "\\sqrt{#0}",
-        "#@^{#?}",
-        "\\sum_{a}^{b}",
-      ],
-      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-    ],
-  };
-  oEditor.addEventListener("input", (ev) => {
-    mathHtml.value = oEditor.value;
-    mathJson.value = transformLatex2MathJson(oEditor.value);
-  });
-};
-
-onMounted(() => {
-  init();
-  textAreaRef.value.insert("\\frac{5b}{4b}");
-});
 </script>
 
 <style>
@@ -105,5 +104,29 @@ onMounted(() => {
 
 #myKeyboardContainer > div .MLK__toolbar {
   display: none;
+}
+
+.menu-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+}
+
+.menu-item {
+  cursor: pointer;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  margin-right: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+@media not (pointer: coarse) {
+  math-field::part(virtual-keyboard-toggle) {
+    display: none;
+  }
 }
 </style>

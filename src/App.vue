@@ -1,25 +1,25 @@
 <script setup>
 import { ref } from "vue";
 import mathPage from "./views/math.vue";
-import matchLivePage from "./views/mathLive.vue";
+import mathLivePage from "./views/mathLive.vue";
 import mathQuill from "./views/mathQuill.vue";
 
 const pageList = ref([
-  {
-    label: "mathJax",
-    value: mathPage,
-  },
+  // {
+  //   label: "mathJax",
+  //   value: mathPage,
+  // },
   {
     label: "mathLive",
-    value: matchLivePage,
+    value: mathLivePage,
   },
-  {
-    label: "mathquill",
-    value: mathQuill,
-  },
+  // {
+  //   label: "mathquill",
+  //   value: mathQuill,
+  // },
 ]);
 
-const componentName = ref(mathPage);
+const componentName = ref(mathLivePage);
 
 const handleClick = (value) => {
   componentName.value = value;
