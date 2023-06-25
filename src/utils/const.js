@@ -1,14 +1,14 @@
 export const symbols = [
   {
-    label: "delta",
+    label: "德尔塔",
     value: "\\Delta",
   },
   {
-    label: "sum",
+    label: "求和",
     value: "\\sum_{}^{}",
   },
   {
-    label: "sqrt",
+    label: "开方",
     value: "\\sqrt[]{}",
   },
   {
