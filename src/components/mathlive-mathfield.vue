@@ -1,5 +1,5 @@
 <template>
-  <math-field ref="mathfieldRef" style="width: 300px; height: 100px">
+  <math-field ref="mathfieldRef">
     {{ value }}
   </math-field>
 </template>
@@ -34,23 +34,23 @@ watch(
 );
 
 const hasFocus = () => {
-  return mathfieldRef.value.hasFocus();
+  return mathfieldRef.value.executeCommand(["hasFocus"]);
 };
 const focus = () => {
-  mathfieldRef.value.focus();
+  return mathfieldRef.value.executeCommand(["focus"]);
 };
 const blur = () => {
-  mathfieldRef.value.blur();
+  return mathfieldRef.value.executeCommand(["blur"]);
 };
 const getValue = (format) => {
-  return mathfieldRef.value.getValue(format);
+  return mathfieldRef.value.executeCommand(["getValue", format]);
 };
-const insert = (text, options) => {
-  mathfieldRef.value.insert(text, options);
+const insert = (text) => {
+  return mathfieldRef.value.executeCommand(["insert", text]);
 };
 
 const select = () => {
-  mathfieldRef.value.select();
+  return mathfieldRef.value.executeCommand(["select"]);
 };
 
 onMounted(() => {
@@ -68,3 +68,17 @@ defineExpose({
   select,
 });
 </script>
+
+<style scoped>
+math-field {
+  min-width: 150px;
+  font-size: 32px;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  --caret-color: red;
+  --selection-background-color: lightgoldenrodyellow;
+  --selection-color: darkblue;
+}
+</style>

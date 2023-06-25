@@ -23,6 +23,7 @@
 <script setup type="module">
 import mathliveMathfield from "../components/mathlive-mathfield.vue";
 import { ComputeEngine } from "https://unpkg.com/@cortex-js/compute-engine?module";
+import { symbols } from "../utils/const";
 import { ref } from "vue";
 
 const latex = ref("");
@@ -31,28 +32,7 @@ const mathJson = ref([]);
 
 const ce = new ComputeEngine();
 
-const menuList = ref([
-  {
-    label: "DELTA",
-    value: "\\Delta",
-  },
-  {
-    label: "frac",
-    value: "\\frac",
-  },
-  {
-    label: "sum",
-    value: "\\sum_{}^{}",
-  },
-  {
-    label: "+",
-    value: "+",
-  },
-  {
-    label: "-",
-    value: "-",
-  },
-]);
+const menuList = ref(symbols);
 
 const handleClick = ({ value }) => {
   mathRef.value.insert(value);
@@ -65,8 +45,11 @@ const onInput = (value) => {
 
 const transformLatex2MathJson = (latex) => {
   const expr = ce.parse(latex, { canonical: true });
+  splitFormula(expr.json);
   return expr.json;
 };
+
+const splitFormula = (expr, deps) => {};
 </script>
 
 <style>
@@ -119,6 +102,8 @@ const transformLatex2MathJson = (latex) => {
   height: 80px;
   line-height: 80px;
   margin-right: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
   text-align: center;
   border: 1px solid #ccc;
   cursor: pointer;
