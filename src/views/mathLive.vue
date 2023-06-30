@@ -22,7 +22,7 @@
 
 <script setup type="module">
 import mathliveMathfield from "../components/mathlive-mathfield.vue";
-import { ComputeEngine } from "https://unpkg.com/@cortex-js/compute-engine?module";
+import { ComputeEngine } from "../utils/compute-engine.min.esm.js";
 import { mathSymbols } from "../utils/const";
 import { ref } from "vue";
 
