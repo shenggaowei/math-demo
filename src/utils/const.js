@@ -1,4 +1,4 @@
-export const symbols = [
+export const mathSymbols = [
   {
     label: "德尔塔",
     value: "\\Delta",

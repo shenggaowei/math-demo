@@ -45,8 +45,21 @@ const blur = () => {
 const getValue = (format) => {
   return mathfieldRef.value.executeCommand(["getValue", format]);
 };
+
 const insert = (text) => {
-  return mathfieldRef.value.executeCommand(["insert", text]);
+  mathfieldRef.value.executeCommand([
+    "insert",
+    text,
+    { feedback: true, focus: true, insertionMode: "insertAfter" },
+  ]);
+  // 如果是下角标，光标移动到下角标中
+  if (text === "_") {
+    mathfieldRef.value.executeCommand(["moveToSubscript"]);
+  }
+  // 如果是上角标，光标移动动上角标中
+  if (text === "^") {
+    mathfieldRef.value.executeCommand(["moveToSuperscript"]);
+  }
 };
 
 const select = () => {

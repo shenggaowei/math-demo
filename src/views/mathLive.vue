@@ -23,7 +23,7 @@
 <script setup type="module">
 import mathliveMathfield from "../components/mathlive-mathfield.vue";
 import { ComputeEngine } from "https://unpkg.com/@cortex-js/compute-engine?module";
-import { symbols } from "../utils/const";
+import { mathSymbols } from "../utils/const";
 import { ref } from "vue";
 
 const latex = ref("");
@@ -32,7 +32,7 @@ const mathJson = ref([]);
 
 const ce = new ComputeEngine();
 
-const menuList = ref(symbols);
+const menuList = ref(mathSymbols);
 
 const handleClick = ({ value }) => {
   mathRef.value.insert(value);
