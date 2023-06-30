@@ -81,14 +81,6 @@ const splitFormula = (expr, deps) => {};
   position: relative;
 }
 
-.math-editor .ML__virtual-keyboard-toggle {
-  display: none !important;
-}
-
-#myKeyboardContainer > div .MLK__toolbar {
-  display: none;
-}
-
 .menu-list {
   display: flex;
   flex-wrap: wrap;
